@@ -7,7 +7,7 @@ import java.util.Arrays;
 @Service
 public class TreeService {
 
-    // Build BST by sequentially inserting values
+    // Builds a BST by sequentially inserting values
     public TreeNode insertSequential(int[] values) {
         TreeNode root = null;
         for (int value : values) {
@@ -41,7 +41,7 @@ public class TreeService {
         return node;
     }
 
-    // Convert BST to a JSON string manually
+    // Converts the tree to a JSON string for database storage (optional)
     public String toJson(TreeNode root) {
         if (root == null) return "null";
         return "{ \"value\": " + root.value +

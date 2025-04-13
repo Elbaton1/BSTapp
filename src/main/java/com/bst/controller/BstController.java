@@ -18,38 +18,43 @@ public class BstController {
     @Autowired
     private TreeRecordRepository treeRecordRepository;
 
-    // Route to display the number entry form
+    // Displays the page with the number entry form
     @GetMapping("/enter-numbers")
     public String enterNumbers() {
         return "enterNumbers";
     }
 
-    // Route to process numbers, build the BST, store in DB and return JSON
+    // Processes the numbers: builds the BST, stores a JSON snapshot in the DB,
+    // and returns the TreeNode object to be serialized as pretty JSON.
     @PostMapping("/process-numbers")
     @ResponseBody
-    public String processNumbers(@RequestParam("numbers") String numbers,
-                                 @RequestParam(value = "balanced", required = false) String balanced) {
+    public TreeNode processNumbers(@RequestParam("numbers") String numbers,
+                                   @RequestParam(value = "balanced", required = false) String balanced) {
+        // Parse input numbers into an array
         String[] parts = numbers.split(",");
         int[] values = new int[parts.length];
         for (int i = 0; i < parts.length; i++) {
             values[i] = Integer.parseInt(parts[i].trim());
         }
 
+        // Build the BST (balanced or sequential)
         TreeNode root;
-        if (balanced != null && balanced.equals("true")) {
+        if ("true".equals(balanced)) {
             root = treeService.createBalancedBST(values);
         } else {
             root = treeService.insertSequential(values);
         }
+        
+        // Convert the tree to JSON (for database storage) without affecting the response
         String treeJson = treeService.toJson(root);
-
         TreeRecord record = new TreeRecord(numbers, treeJson);
         treeRecordRepository.save(record);
 
-        return treeJson;
+        // Return the TreeNode object. Jackson will serialize it as pretty JSON.
+        return root;
     }
 
-    // Route to display previously saved trees
+    // Retrieves and displays all stored tree records
     @GetMapping("/previous-trees")
     public String previousTrees(Model model) {
         model.addAttribute("allTrees", treeRecordRepository.findAll());
