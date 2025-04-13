@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter Numbers</title>
+</head>
+<body>
+    <h2>Enter Your Numbers to Build a BST</h2>
+    <form action="/process-numbers" method="post">
+        <label>Enter numbers (comma-separated):</label><br>
+        <input type="text" name="numbers" placeholder="e.g. 3, 1, 2" /><br><br>
+        <label>Make Balanced?</label>
+        <input type="checkbox" name="balanced" value="true" /><br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <br>
+    <form action="/previous-trees" method="get">
+        <button type="submit">Show Previous Trees</button>
+    </form>
+</body>
+</html>
